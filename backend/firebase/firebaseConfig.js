@@ -1,9 +1,8 @@
-// Import the Firebase app instance from sample.js
 const {initializeApp} = require("firebase/app");
 const {getAuth} = require("firebase/auth");
 const {getFirestore} = require("firebase/firestore");
 
-// Firebase configuration from sample.js
+// Firebase configuration
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,

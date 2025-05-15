@@ -8,7 +8,7 @@ const {
     EmailAuthProvider,
     reauthenticateWithCredential
 } = require('firebase/auth');
-const {doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs, limit, deleteDoc} = require('firebase/firestore');
+const {doc, setDoc, updateDoc, collection, query, where, getDocs, limit, deleteDoc} = require('firebase/firestore');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -32,7 +32,7 @@ const createReadableId = (username) => {
 // Load admin emails from Firestore
 async function loadAdminEmails() {
     if (adminEmailsLoaded) return ADMIN_EMAILS; // Skip if already loaded
-    
+
     try {
         const adminCollection = collection(db, 'admins');
         const snapshot = await getDocs(adminCollection);
@@ -45,13 +45,6 @@ async function loadAdminEmails() {
         return [];
     }
 }
-
-// Completely disabled email notification functionality
-const sendAdminLoginNotification = async (adminEmail) => {
-    // This function is intentionally disabled to prevent email notification issues
-    console.log('Email notifications are disabled');
-    return Promise.resolve();
-};
 
 /**
  * Register a new user with Firebase Authentication and store additional data in the Firestore
@@ -67,24 +60,24 @@ const createUser = async (userData) => {
 
         // Determine if the user is an admin
         const isAdmin = ADMIN_EMAILS.includes(userData.email);
-        
+
         // Create a readable document ID from username or email
         const username = userData.username || userData.email.split('@')[0];
         const readableId = createReadableId(username);
-        
+
         // Check if there are any references to this email in existing documents
         // that might have been left over from a previous deletion
         const usersRef = collection(db, 'users');
         const q = query(usersRef, where('email', '==', userData.email), limit(1));
         const existingUserSnapshot = await getDocs(q);
-        
+
         // If there's an existing document with this email, delete it to avoid conflicts
         if (!existingUserSnapshot.empty) {
             const oldDocId = existingUserSnapshot.docs[0].id;
             await deleteDoc(doc(db, 'users', oldDocId));
             console.log(`Deleted existing document for email ${userData.email} with ID ${oldDocId}`);
         }
-        
+
         // Store user data in Firestore using the readable ID
         await setDoc(doc(db, 'users', readableId), {
             firstName: userData.firstName,
@@ -100,8 +93,8 @@ const createUser = async (userData) => {
             createdAt: new Date().toISOString()
             // Do not store password in Firestore as Firebase Auth handles this
         });
-        
-        // If user is admin, add them to admins collection with readable ID
+
+        // If the user is admin, add them to admins' collection with readable ID
         if (isAdmin) {
             const adminReadableId = `admin_${readableId}`;
             await setDoc(doc(db, 'admins', adminReadableId), {
@@ -131,11 +124,11 @@ const createUser = async (userData) => {
  */
 const loginUser = async (email, password) => {
     console.log(`Login attempt for email: ${email}`);
-    
+
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     console.log(`Authentication successful for ${email}`);
 
-    // Always ensure primary admin email is in ADMIN_EMAILS
+    // Always ensure the primary admin email is in ADMIN_EMAILS
     const isPrimaryAdmin = email === 'prathmeshojha2307@gmail.com';
     if (isPrimaryAdmin && !ADMIN_EMAILS.includes(email)) {
         ADMIN_EMAILS.push(email);
@@ -146,19 +139,19 @@ const loginUser = async (email, password) => {
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('email', '==', email), limit(1));
     const userSnapshot = await getDocs(q);
-    
+
     if (userSnapshot.empty) {
         // Create a user document if it doesn't exist
         console.log(`User document not found for ${email}. Creating one now.`);
-        
-        // Determine if user should be an admin - force true for primary admin
+
+        // Determine if the user should be an admin - force true for primary admin
         const isUserInAdminList = isPrimaryAdmin || ADMIN_EMAILS.includes(email);
-        
+
         // Create readable ID for the new user
         const username = email.split('@')[0];
         const readableId = createReadableId(username);
-        
-        // Create basic user profile
+
+        // Create a basic user profile
         const userData = {
             firstName: username,
             lastName: '',
@@ -172,12 +165,12 @@ const loginUser = async (email, password) => {
             authUid: userCredential.user.uid,
             createdAt: new Date().toISOString()
         };
-        
+
         // Save to Firestore with readable ID
         await setDoc(doc(db, 'users', readableId), userData);
         console.log(`Created user document with isAdmin=${isUserInAdminList}`);
-        
-        // If admin, also add to admins collection with readable ID
+
+        // If admin, also add to admins' collection with readable ID
         if (isUserInAdminList) {
             const adminReadableId = `admin_${readableId}`;
             await setDoc(doc(db, 'admins', adminReadableId), {
@@ -187,7 +180,7 @@ const loginUser = async (email, password) => {
             });
             console.log(`Added user to admins collection`);
         }
-        
+
         return {
             uid: userCredential.user.uid,
             readableId: readableId,
@@ -205,11 +198,11 @@ const loginUser = async (email, password) => {
     const userData = userDoc.data();
     const readableId = userDoc.id;
     console.log(`Loaded user document with isAdmin=${userData.isAdmin}`);
-    
+
     // For the primary admin, always ensure admin status is true
     if (isPrimaryAdmin) {
         console.log(`Primary admin account detected, ensuring admin privileges`);
-        
+
         if (!userData.isAdmin) {
             await updateDoc(doc(db, 'users', readableId), {
                 isAdmin: true
@@ -217,15 +210,15 @@ const loginUser = async (email, password) => {
             userData.isAdmin = true;
             console.log(`Updated user document isAdmin to true`);
         }
-        
-        // Ensure in admins collection with readable ID
+
+        // Ensure in admins' collection with readable ID
         const adminReadableId = `admin_${readableId}`;
         await setDoc(doc(db, 'admins', adminReadableId), {
             email: email,
             userId: readableId,
             addedAt: new Date().toISOString()
         });
-        
+
         return {
             uid: userCredential.user.uid,
             readableId: readableId,
@@ -238,11 +231,11 @@ const loginUser = async (email, password) => {
             isAdmin: true
         };
     }
-    
+
     // For other users, check admin status as normal
     const isAdmin = await isUserAdmin(email);
-    
-    // If user is admin but not marked as admin in DB, update their record
+
+    // If the user is admin but not marked as admin in DB, update their record
     if (isAdmin && !userData.isAdmin) {
         await updateDoc(doc(db, 'users', readableId), {
             isAdmin: true
@@ -311,33 +304,33 @@ const resetPassword = async (token, newPassword) => {
  */
 const isUserAdmin = async (email) => {
     console.log(`Checking admin status for email: ${email}`);
-    
+
     // Special case for primary admin
     if (email === 'prathmeshojha2307@gmail.com') {
         console.log('Primary admin email detected. Admin access granted.');
-        
+
         // Ensure in ADMIN_EMAILS
         if (!ADMIN_EMAILS.includes(email)) {
             ADMIN_EMAILS.push(email);
         }
-        
+
         return true;
     }
-    
-    // First check against the in-memory admin list for faster response
+
+    // First, check against the in-memory admin list for faster response
     if (ADMIN_EMAILS.includes(email)) {
         console.log(`- Found in ADMIN_EMAILS list. Email is admin.`);
         return true;
     }
-    
-    // Then check in the admins collection
+
+    // Then check in the admin's collection
     try {
         const adminsRef = collection(db, 'admins');
         const q = query(adminsRef, where('email', '==', email), limit(1));
         const snapshot = await getDocs(q);
-        
+
         if (!snapshot.empty) {
-            // Add to in-memory cache for future checks
+            // Add to the in-memory cache for future checks
             if (!ADMIN_EMAILS.includes(email)) {
                 ADMIN_EMAILS.push(email);
                 console.log(`- Found in admins collection. Added to ADMIN_EMAILS. Email is admin.`);
@@ -351,26 +344,26 @@ const isUserAdmin = async (email) => {
     } catch (error) {
         console.error('Error checking admin status in admins collection:', error);
     }
-    
-    // Fallback: check isAdmin flag in users collection 
+
+    // Fallback: check isAdmin flag in users' collection
     try {
         const usersRef = collection(db, 'users');
         const q = query(usersRef, where('email', '==', email), where('isAdmin', '==', true), limit(1));
         const snapshot = await getDocs(q);
-        
+
         if (!snapshot.empty) {
-            // If we find an admin user, add them to the admins collection for future checks
+            // If we find an admin user, add them to the admin's collection for future checks
             try {
                 const userDoc = snapshot.docs[0];
                 const readableId = userDoc.id;
                 const adminReadableId = `admin_${readableId}`;
-                
+
                 await setDoc(doc(db, 'admins', adminReadableId), {
                     email: email,
                     userId: readableId,
                     addedAt: new Date().toISOString()
                 });
-                
+
                 // Add to in-memory cache
                 if (!ADMIN_EMAILS.includes(email)) {
                     ADMIN_EMAILS.push(email);
@@ -379,12 +372,12 @@ const isUserAdmin = async (email) => {
                 return true;
             } catch (error) {
                 console.error('Error adding admin to admins collection:', error);
-                // Even if we couldn't add to admins collection, the user is still an admin
+                // Even if we couldn't add to admins' collection, the user is still an admin
                 console.log(`- Found in users collection with isAdmin=true. Email is admin.`);
                 return true;
             }
         }
-        
+
         console.log(`- Not found in users collection with isAdmin=true. Email is NOT admin.`);
         return false;
     } catch (error) {
@@ -402,25 +395,25 @@ const promoteUserToAdmin = async (userEmail, adminEmail) => {
     if (!isAdmin) {
         throw new Error('Unauthorized: Only admins can promote users');
     }
-    
+
     // Find the user to promote
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('email', '==', userEmail), limit(1));
     const userSnapshot = await getDocs(q);
-    
+
     if (userSnapshot.empty) {
         throw new Error('User not found');
     }
-    
+
     const userDoc = userSnapshot.docs[0];
     const readableId = userDoc.id;
-    
-    // Update the user to an admin in users collection
+
+    // Update the user to an admin in users' collection
     await updateDoc(doc(db, 'users', readableId), {
         isAdmin: true
     });
-    
-    // Add to admins collection with readable ID
+
+    // Add to admins' collection with readable ID
     const adminReadableId = `admin_${readableId}`;
     await setDoc(doc(db, 'admins', adminReadableId), {
         email: userEmail,
@@ -428,84 +421,88 @@ const promoteUserToAdmin = async (userEmail, adminEmail) => {
         addedAt: new Date().toISOString(),
         promotedBy: adminEmail
     });
-    
-    // Add to admin emails array if not already there
+
+    // Add to the admin emails array if not already there
     if (!ADMIN_EMAILS.includes(userEmail)) {
         ADMIN_EMAILS.push(userEmail);
     }
-    
-    return { message: `User ${userEmail} has been promoted to admin` };
+
+    return {message: `User ${userEmail} has been promoted to admin`};
 };
 
 /**
  * Delete a user account
  */
 const deleteUserAccount = async (email, password) => {
-    try {
-        // First, get current user from auth
-        const currentUser = auth.currentUser;
-        
-        // If no current user in auth, try to re-authenticate
-        if (!currentUser) {
-            throw new Error('You must be logged in to delete your account');
-        }
-        
-        // Re-authenticate user with password before deletion
-        const credential = EmailAuthProvider.credential(email, password);
-        await reauthenticateWithCredential(currentUser, credential);
-        
-        // Find the user in Firestore
-        const usersRef = collection(db, 'users');
-        const q = query(usersRef, where('email', '==', email), limit(1));
-        const userSnapshot = await getDocs(q);
-        
-        if (userSnapshot.empty) {
-            throw new Error('User not found in database');
-        }
-        
-        const userDoc = userSnapshot.docs[0];
-        const userId = userDoc.id;
-        
-        // Delete the user document from Firestore
-        await deleteDoc(doc(db, 'users', userId));
-        
-        // If user is admin, also remove from admins collection
-        if (ADMIN_EMAILS.includes(email)) {
-            const adminReadableId = `admin_${userId}`;
-            await deleteDoc(doc(db, 'admins', adminReadableId));
-            
-            // Update in-memory admin list
-            const emailIndex = ADMIN_EMAILS.indexOf(email);
-            if (emailIndex !== -1) {
-                ADMIN_EMAILS.splice(emailIndex, 1);
+    return Promise.resolve()
+        .then(() => {
+            const currentUser = auth.currentUser;
+            if (!currentUser) {
+                throw new Error('You must be logged in to delete your account');
             }
-        }
-        
-        // Delete user from Firebase Authentication
-        await deleteUser(currentUser);
-        
-        return { success: true, message: 'Account deleted successfully' };
-    } catch (error) {
-        console.error('Error in deleteUserAccount:', error);
-        
-        // Handle specific errors
-        if (error.code === 'auth/wrong-password') {
-            throw new Error('Incorrect password');
-        } else if (error.code === 'auth/too-many-requests') {
-            throw new Error('Too many attempts. Please try again later.');
-        } else if (error.code === 'auth/requires-recent-login') {
-            throw new Error('Please log out and log in again before deleting your account');
-        }
-        
-        throw error;
-    }
-};
+            return currentUser;
+        })
+        .then((currentUser) => {
+            const credential = EmailAuthProvider.credential(email, password);
+            return reauthenticateWithCredential(currentUser, credential)
+                .then(() => currentUser);
+        })
+        .then((currentUser) => {
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('email', '==', email), limit(1));
+            return getDocs(q)
+                .then(userSnapshot => {
+                    if (userSnapshot.empty) {
+                        throw new Error('User not found in database');
+                    }
+                    return {
+                        currentUser,
+                        userDoc: userSnapshot.docs[0],
+                        userId: userSnapshot.docs[0].id
+                    };
+                });
+        })
+        .then(({currentUser, userId}) => {
+            return deleteDoc(doc(db, 'users', userId))
+                .then(() => ({currentUser, userId}));
+        })
+        .then(({currentUser, userId}) => {
+            if (ADMIN_EMAILS.includes(email)) {
+                const adminReadableId = `admin_${userId}`;
+                return deleteDoc(doc(db, 'admins', adminReadableId))
+                    .then(() => {
+                        const emailIndex = ADMIN_EMAILS.indexOf(email);
+                        if (emailIndex !== -1) {
+                            ADMIN_EMAILS.splice(emailIndex, 1);
+                        }
+                        return currentUser;
+                    });
+            }
+            return currentUser;
+        })
+        .then((currentUser) => {
+            return deleteUser(currentUser)
+                .then(() => ({success: true, message: 'Account deleted successfully'}));
+        })
+        .catch(error => {
+            console.error('Error in deleteUserAccount:', error);
 
+            if (error.code === 'auth/wrong-password') {
+                throw new Error('Incorrect password');
+            } else if (error.code === 'auth/too-many-requests') {
+                throw new Error('Too many attempts. Please try again later.');
+            } else if (error.code === 'auth/requires-recent-login') {
+                throw new Error('Please log out and log in again before deleting your account');
+            }
+
+            throw error;
+        });
+};
 module.exports = {
-    createUser, 
-    loginUser, 
-    forgotPassword, 
-    resetPassword, 
+    createUser,
+    loginUser,
+    forgotPassword,
+    resetPassword,
     isUserAdmin,
     promoteUserToAdmin,
     ADMIN_EMAILS,

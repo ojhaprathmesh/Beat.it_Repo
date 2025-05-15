@@ -1,16 +1,6 @@
 const {db, storage} = require('./firebaseConfig');
-const {
-    collection,
-    doc,
-    setDoc,
-    getDocs,
-    writeBatch
-} = require('firebase/firestore');
-const {
-    ref,
-    uploadBytes,
-    getDownloadURL
-} = require('firebase/storage');
+const {collection, doc, setDoc, getDocs, writeBatch} = require('firebase/firestore');
+const {ref, uploadBytes, getDownloadURL} = require('firebase/storage');
 const fs = require('fs');
 const path = require('path');
 
@@ -156,10 +146,6 @@ const exportSongsToJSON = async () => {
 };
 
 module.exports = {
-    addSong,
-    migrateSongs,
-    getAllSongs,
-    uploadSongFile,
-    migrateSongFiles,
-    exportSongsToJSON
+    addSong, migrateSongs, getAllSongs,
+    uploadSongFile, migrateSongFiles, exportSongsToJSON
 }; 
