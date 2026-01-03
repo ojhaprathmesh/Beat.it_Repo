@@ -42,6 +42,17 @@ async function loadAdminEmails() {
         return ADMIN_EMAILS;
     } catch (error) {
         console.error('Error loading admin emails:', error);
+        
+        // Fallback: If we can't access the admins collection, use a default admin email
+        // This prevents the app from crashing and allows basic functionality
+        if (error.code === 'permission-denied') {
+            console.log('Firebase permissions issue detected. Using fallback admin configuration.');
+            // You can add default admin emails here if needed
+            ADMIN_EMAILS = [];
+            adminEmailsLoaded = true;
+            return ADMIN_EMAILS;
+        }
+        
         return [];
     }
 }

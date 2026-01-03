@@ -1,56 +1,6 @@
 [
   {
     "id": 1,
-    "title": "Bhool Bhulaiyaa",
-    "artist": [
-      "Neeraj Shridhar"
-    ],
-    "album": "Bhool Bhulaiyaa",
-    "genre": "Bollywood",
-    "file": "/uploads/bhool-bhulaiyaa.mp3",
-    "albumCover": "/assets/album-covers/bhool-bhulaiyaa.webp",
-    "duration": "3:30"
-  },
-  {
-    "id": 2,
-    "title": "Daaru Desi",
-    "artist": [
-      "Benny Dayal"
-    ],
-    "album": "Cocktail",
-    "genre": "Bollywood",
-    "file": "/uploads/daaru-desi.mp3",
-    "albumCover": "/assets/album-covers/cocktail.webp",
-    "duration": "3:30"
-  },
-  {
-    "id": 3,
-    "title": "Desi Kalakaar",
-    "artist": [
-      "Yo Yo Honey Singh"
-    ],
-    "album": "Desi Kalakaar",
-    "genre": "Bollywood",
-    "file": "/uploads/desi-kalakaar.mp3",
-    "albumCover": "/assets/album-covers/desi-kalakaar.webp",
-    "duration": "3:30"
-  },
-  {
-    "id": 4,
-    "title": "Dil Dhadakne Do",
-    "artist": [
-      "Shankar-Ehsaan-Loy",
-      "Suraj Jagan",
-      "Shankar Mahadevan"
-    ],
-    "album": "Zindagi Na Milegi Dobara",
-    "genre": "Bollywood",
-    "file": "/uploads/dil-dhadakne-do.mp3",
-    "albumCover": "/assets/album-covers/sooraj-ki-baahon-mein.webp",
-    "duration": "3:30"
-  },
-  {
-    "id": 5,
     "title": "Do Pal",
     "artist": [
       "Lata Mangeshkar",
@@ -62,7 +12,62 @@
     "genre": "Bollywood",
     "file": "/uploads/do-pal.mp3",
     "albumCover": "/assets/album-covers/veer-zaara.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
+  },
+  {
+    "id": 2,
+    "title": "Bhool Bhulaiyaa",
+    "artist": [
+      "Neeraj Shridhar"
+    ],
+    "album": "Bhool Bhulaiyaa",
+    "genre": "Bollywood",
+    "file": "/uploads/bhool-bhulaiyaa.mp3",
+    "albumCover": "/assets/album-covers/bhool-bhulaiyaa.webp",
+    "duration": "3:30",
+    "playCount": 25
+  },
+  {
+    "id": 3,
+    "title": "Daaru Desi",
+    "artist": [
+      "Benny Dayal"
+    ],
+    "album": "Cocktail",
+    "genre": "Bollywood",
+    "file": "/uploads/daaru-desi.mp3",
+    "albumCover": "/assets/album-covers/cocktail.webp",
+    "duration": "3:30",
+    "playCount": 0
+  },
+  {
+    "id": 4,
+    "title": "Desi Kalakaar",
+    "artist": [
+      "Yo Yo Honey Singh"
+    ],
+    "album": "Desi Kalakaar",
+    "genre": "Bollywood",
+    "file": "/uploads/desi-kalakaar.mp3",
+    "albumCover": "/assets/album-covers/desi-kalakaar.webp",
+    "duration": "3:30",
+    "playCount": 1
+  },
+  {
+    "id": 5,
+    "title": "Dil Dhadakne Do",
+    "artist": [
+      "Shankar-Ehsaan-Loy",
+      "Suraj Jagan",
+      "Shankar Mahadevan"
+    ],
+    "album": "Zindagi Na Milegi Dobara",
+    "genre": "Bollywood",
+    "file": "/uploads/dil-dhadakne-do.mp3",
+    "albumCover": "/assets/album-covers/sooraj-ki-baahon-mein.webp",
+    "duration": "3:30",
+    "playCount": 1
   },
   {
     "id": 6,
@@ -74,7 +79,8 @@
     "genre": "Bollywood",
     "file": "/uploads/im-your-dj-tonight.mp3",
     "albumCover": "/assets/album-covers/desi-kalakaar.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 1
   },
   {
     "id": 7,
@@ -86,7 +92,8 @@
     "genre": "Bollywood",
     "file": "/uploads/kabhi-kabhi-aditi.mp3",
     "albumCover": "/assets/album-covers/kabhi-kabhi-aditi.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 15
   },
   {
     "id": 8,
@@ -98,7 +105,8 @@
     "genre": "Bollywood",
     "file": "/uploads/labon-ko-bhool-bhulaiyaa.mp3",
     "albumCover": "/assets/album-covers/bhool-bhulaiyaa.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 13
   },
   {
     "id": 9,
@@ -110,7 +118,8 @@
     "genre": "Bollywood",
     "file": "/uploads/love-dose.mp3",
     "albumCover": "/assets/album-covers/desi-kalakaar.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
   },
   {
     "id": 10,
@@ -124,7 +133,8 @@
     "genre": "Bollywood",
     "file": "/uploads/main-yahaan-hoon.mp3",
     "albumCover": "/assets/album-covers/veer-zaara.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
   },
   {
     "id": 11,
@@ -136,7 +146,8 @@
     "genre": "Bollywood",
     "file": "/uploads/mere-dholna-bhool-bhulaiyaa.mp3",
     "albumCover": "/assets/album-covers/bhool-bhulaiyaa.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 1
   },
   {
     "id": 12,
@@ -150,7 +161,8 @@
     "genre": "Bollywood",
     "file": "/uploads/nazrein-milaana-nazrein-churaana.mp3",
     "albumCover": "/assets/album-covers/kabhi-kabhi-aditi.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 29
   },
   {
     "id": 13,
@@ -164,7 +176,8 @@
     "genre": "Bollywood",
     "file": "/uploads/pappu-cant-dance.mp3",
     "albumCover": "/assets/album-covers/kabhi-kabhi-aditi.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
   },
   {
     "id": 14,
@@ -176,7 +189,8 @@
     "genre": "Bollywood",
     "file": "/uploads/second-hand-jawaani.mp3",
     "albumCover": "/assets/album-covers/cocktail.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 2
   },
   {
     "id": 15,
@@ -190,7 +204,8 @@
     "genre": "Bollywood",
     "file": "/uploads/senorita.mp3",
     "albumCover": "/assets/album-covers/sooraj-ki-baahon-mein.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 1
   },
   {
     "id": 16,
@@ -204,7 +219,8 @@
     "genre": "Bollywood",
     "file": "/uploads/sooraj-ki-baahon-mein.mp3",
     "albumCover": "/assets/album-covers/sooraj-ki-baahon-mein.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
   },
   {
     "id": 17,
@@ -216,7 +232,8 @@
     "genre": "Pop",
     "file": "/uploads/tera-naam-japdi-phiran.mp3",
     "albumCover": "/assets/album-covers/cocktail.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 14
   },
   {
     "id": 18,
@@ -231,6 +248,7 @@
     "genre": "Bollywood",
     "file": "/uploads/tere-liye.mp3",
     "albumCover": "/assets/album-covers/veer-zaara.webp",
-    "duration": "3:30"
+    "duration": "3:30",
+    "playCount": 0
   }
 ]
