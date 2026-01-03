@@ -1,7 +1,9 @@
-*.txt
-*.py
-/.idea
-/node_modules
-/example.html
-/frontend/public/data/songsData.js
-.env
+# Ignore ide files
+.vscode
+.idea
+
+# Ignore libraries and build files
+node_modules
+
+# Ignore environment variables
+*.env
